@@ -442,8 +442,12 @@ document.write(`
 <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://www.detik.com/terpopuler&quot;</span>
 <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0&quot;</span><span class="p">}</span>
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gagal mengambil halaman utama: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -453,7 +457,7 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="n">link</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
         <span class="n">link</span> <span class="o">=</span> <span class="s2">&quot;https:&quot;</span> <span class="o">+</span> <span class="n">link</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">resp_detail</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">resp_detail</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">soup_detail</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp_detail</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
 
         <span class="c1"># Judul</span>
@@ -476,18 +480,24 @@ document.write(`
                 <span class="s2">&quot;link&quot;</span><span class="p">:</span> <span class="n">link</span>
             <span class="p">})</span>
 
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># delay lebih lama agar tidak diblokir</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gagal ambil </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;berita_detik.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8-sig&quot;</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_colwidth&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kategori unik yang diambil:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kategori&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah kategori unik:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kategori&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
 <span class="n">df</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kategori unik yang diambil: [&#39;&#39;]
+Jumlah kategori unik: 1
+</pre></div>
+</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -515,38 +525,119 @@ document.write(`
   <tbody>
     <tr>
       <th>0</th>
-      <td>Detik-detik Charlie Kirk Influencer Pro-Trump Ditembak saat Pidato di Kampus</td>
+      <td>Yusril Tegaskan TNI Tak Bisa Laporkan Ferry Irwandi, Singgung Putusan MK</td>
       <td></td>
-      <td>Aktivis sayap kanan AS yang juga sekutu berpengaruh PresidenDonald Trump, Charlie Kirk, meningga...</td>
-      <td>https://news.detik.com/internasional/d-8106350/detik-detik-charlie-kirk-influencer-pro-trump-dit...</td>
+      <td>Menteri Koordinator (Menko) Hukum, HAM, Imigrasi, dan Pemasyarakatan (Kumham Imipas) Yusril Ihza...</td>
+      <td>https://news.detik.com/berita/d-8106754/yusril-tegaskan-tni-tak-bisa-laporkan-ferry-irwandi-sing...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Detik-detik Charlie Kirk Influencer Pro-Trump Ditembak saat Pidato di Kampus</td>
+      <td>Yusril Tegaskan TNI Tak Bisa Laporkan Ferry Irwandi, Singgung Putusan MK</td>
       <td></td>
-      <td>Aktivis sayap kanan AS yang juga sekutu berpengaruh PresidenDonald Trump, Charlie Kirk, meningga...</td>
-      <td>https://news.detik.com/internasional/d-8106350/detik-detik-charlie-kirk-influencer-pro-trump-dit...</td>
+      <td>Menteri Koordinator (Menko) Hukum, HAM, Imigrasi, dan Pemasyarakatan (Kumham Imipas) Yusril Ihza...</td>
+      <td>https://news.detik.com/berita/d-8106754/yusril-tegaskan-tni-tak-bisa-laporkan-ferry-irwandi-sing...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Pengakuan Noel soal Setoran Lain Diungkap KPK</td>
+      <td>Identitas Pembunuh Sekeluarga di Indramayu Terungkap Berkat 'Kambing Hitam'</td>
       <td></td>
-      <td>Temuan baru mencuat terkait kasus pemerasan sertifikasi keselamatan dan kesehatan kerja (K3) yan...</td>
-      <td>https://news.detik.com/berita/d-8106306/pengakuan-noel-soal-setoran-lain-diungkap-kpk</td>
+      <td>Duapembunuhsekeluarga di Indramayu, Jawa Barat, ditangkap polisi. Ternyata identitas mereka teru...</td>
+      <td>https://news.detik.com/berita/d-8106554/identitas-pembunuh-sekeluarga-di-indramayu-terungkap-ber...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Pengakuan Noel soal Setoran Lain Diungkap KPK</td>
+      <td>Identitas Pembunuh Sekeluarga di Indramayu Terungkap Berkat 'Kambing Hitam'</td>
       <td></td>
-      <td>Temuan baru mencuat terkait kasus pemerasan sertifikasi keselamatan dan kesehatan kerja (K3) yan...</td>
-      <td>https://news.detik.com/berita/d-8106306/pengakuan-noel-soal-setoran-lain-diungkap-kpk</td>
+      <td>Duapembunuhsekeluarga di Indramayu, Jawa Barat, ditangkap polisi. Ternyata identitas mereka teru...</td>
+      <td>https://news.detik.com/berita/d-8106554/identitas-pembunuh-sekeluarga-di-indramayu-terungkap-ber...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Babak Baru RUU Perampasan Aset</td>
+      <td>Charlie Kirk Tewas, Trump Perintahkan Pengibaran Bendera Setengah Tiang</td>
       <td></td>
-      <td>Rancangan Undang-Undang (RUU) Perampasan Aset diusulkan masuk ke dalam program legislasi nasiona...</td>
-      <td>https://news.detik.com/berita/d-8106394/babak-baru-ruu-perampasan-aset</td>
+      <td>Influencer Amerika Serikat sekaligus loyalisPresiden Donald Trump,Charlie Kirk, ditembak mati sa...</td>
+      <td>https://news.detik.com/internasional/d-8106518/charlie-kirk-tewas-trump-perintahkan-pengibaran-b...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ...existing code...</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;berita_detik.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8-sig&quot;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_colwidth&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kategori unik yang diambil:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kategori&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah kategori unik:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;kategori&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kategori unik yang diambil: [&#39;&#39;]
+Jumlah kategori unik: 1
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>judul</th>
+      <th>kategori</th>
+      <th>isi</th>
+      <th>link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Yusril Tegaskan TNI Tak Bisa Laporkan Ferry Irwandi, Singgung Putusan MK</td>
+      <td></td>
+      <td>Menteri Koordinator (Menko) Hukum, HAM, Imigrasi, dan Pemasyarakatan (Kumham Imipas) Yusril Ihza...</td>
+      <td>https://news.detik.com/berita/d-8106754/yusril-tegaskan-tni-tak-bisa-laporkan-ferry-irwandi-sing...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Yusril Tegaskan TNI Tak Bisa Laporkan Ferry Irwandi, Singgung Putusan MK</td>
+      <td></td>
+      <td>Menteri Koordinator (Menko) Hukum, HAM, Imigrasi, dan Pemasyarakatan (Kumham Imipas) Yusril Ihza...</td>
+      <td>https://news.detik.com/berita/d-8106754/yusril-tegaskan-tni-tak-bisa-laporkan-ferry-irwandi-sing...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Identitas Pembunuh Sekeluarga di Indramayu Terungkap Berkat 'Kambing Hitam'</td>
+      <td></td>
+      <td>Duapembunuhsekeluarga di Indramayu, Jawa Barat, ditangkap polisi. Ternyata identitas mereka teru...</td>
+      <td>https://news.detik.com/berita/d-8106554/identitas-pembunuh-sekeluarga-di-indramayu-terungkap-ber...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Identitas Pembunuh Sekeluarga di Indramayu Terungkap Berkat 'Kambing Hitam'</td>
+      <td></td>
+      <td>Duapembunuhsekeluarga di Indramayu, Jawa Barat, ditangkap polisi. Ternyata identitas mereka teru...</td>
+      <td>https://news.detik.com/berita/d-8106554/identitas-pembunuh-sekeluarga-di-indramayu-terungkap-ber...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Charlie Kirk Tewas, Trump Perintahkan Pengibaran Bendera Setengah Tiang</td>
+      <td></td>
+      <td>Influencer Amerika Serikat sekaligus loyalisPresiden Donald Trump,Charlie Kirk, ditembak mati sa...</td>
+      <td>https://news.detik.com/internasional/d-8106518/charlie-kirk-tewas-trump-perintahkan-pengibaran-b...</td>
     </tr>
   </tbody>
 </table>
