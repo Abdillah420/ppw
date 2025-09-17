@@ -4,10 +4,15 @@
 format: jb-book
 root: intro
 chapters:
-- file: pengantar
-- file: notebooks
-- file: WEB_TA
-- file: crawlingdata
-- file: berita_crawling
-- file: link
-
+  - file: pengantar
+#
+  - file: WEB_TA
+  - file: crawling
+  - file: crawlingdata
+  - file: berita_crawling
+  - file: link
+  - file: Link2
+  - file: pta_manajemen
+  - file: preprocessing_stopword
+#  - file: markdown
+#  - file: markdown-notebooks
