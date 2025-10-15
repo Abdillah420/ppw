@@ -2268,7 +2268,7 @@ Score: 0.03898896276950836	 Topic: 0.012*&quot;kendara&quot; + 0.011*&quot;mobil
 <p><strong>Testing model on unseen document</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unseen_document</span> <span class="o">=</span> <span class="s2">&quot;Perkenalkan saya Rifqi&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unseen_document</span> <span class="o">=</span> <span class="s2">&quot;abdillah&quot;</span>
 
 <span class="n">bow_vector</span> <span class="o">=</span> <span class="n">dic</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">unseen_document</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">lda_model</span><span class="p">[</span><span class="n">bow_vector</span><span class="p">],</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">tup</span> <span class="p">:</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
