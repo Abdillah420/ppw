@@ -15,5 +15,7 @@ chapters:
   - file: pta_manajemen
   - file: preprocessing_stopword
   - file: tugas6_Abdillah
+  - file: klasifikasiBerita
+  - file: clusteringSpam
 #  - file: markdown
 #  - file: markdown-notebooks
